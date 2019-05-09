@@ -252,3 +252,4 @@ for test_sample in range(0,len(test_data)):
             pd_results = pd.DataFrame(results)
             pd_results.to_csv('pd_results.csv',index=False)
             pass
+        pd_results.to_csv('/content/gdrive/My Drive/results_transe_100.csv',index=False)
