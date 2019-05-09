@@ -229,21 +229,21 @@ for test_sample in range(0,len(test_data)):
                     print(str(test_sample)+ ':solution found ('+str(i)+')')
                     results.append(i)
                     pd_results = pd.DataFrame(results)
-                    pd_results.to_csv('pd_results.csv',index=False)
+                    pd_results.to_csv('/content/gdrive/My Drive/results_transe_100.csv',index=False)
                     break
 
                 if i>100:
                     print(str(test_sample)+ ':too long')
                     results.append(0)
                     pd_results = pd.DataFrame(results)
-                    pd_results.to_csv('pd_results.csv',index=False)
+                    pd_results.to_csv('/content/gdrive/My Drive/results_transe_100.csv',index=False)
                     break
 
                 if len(actions)==0:
                     print(str(test_sample)+ ':solution not found')
                     results.append(-1)
                     pd_results = pd.DataFrame(results)
-                    pd_results.to_csv('pd_results.csv',index=False)
+                    pd_results.to_csv('/content/gdrive/My Drive/results_transe_100.csv',index=False)
                     break
 
         except:
@@ -251,5 +251,5 @@ for test_sample in range(0,len(test_data)):
             results.append(-2)
             pd_results = pd.DataFrame(results)
             pd_results.to_csv('pd_results.csv',index=False)
+            pd_results.to_csv('/content/gdrive/My Drive/results_transe_100.csv',index=False)
             pass
-        pd_results.to_csv('/content/gdrive/My Drive/results_transe_100.csv',index=False)
