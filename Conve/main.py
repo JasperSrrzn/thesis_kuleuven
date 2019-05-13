@@ -33,7 +33,7 @@ Config.backend = Backends.TORCH
 Config.parse_argv(sys.argv)
 
 Config.cuda = True
-Config.embedding_dim = 200
+Config.embedding_dim = 50
 #Logger.GLOBAL_LOG_LEVEL = LogLevel.DEBUG
 
 
