@@ -83,7 +83,7 @@ def preprocess(dataset_name, delete_data=False):
         p.add_sent_processor(ToLower())
         p.add_sent_processor(CustomTokenizer(lambda x: x.split(' ')),keys=['e2_multi1', 'e2_multi2'])
         p.add_post_processor(ConvertTokenToIdx(keys2keys=keys2keys), keys=['e1', 'rel', 'rel_eval', 'e2', 'e2_multi1', 'e2_multi2'])
-        p.add_post_processor(StreamToHDF5(name, samples_per_file=10000, keys=input_keys))
+        p.add_post_processor(StreamToHDF5(name, samples_per_file=100, keys=input_keys))
         p.execute(d)
 
 
@@ -97,8 +97,8 @@ def main():
     num_entities = vocab['e1'].num_token
 
     train_batcher = StreamBatcher(Config.dataset, 'train', Config.batch_size, randomize=True, keys=input_keys)
-    dev_rank_batcher = StreamBatcher(Config.dataset, 'dev_ranking', Config.batch_size, randomize=False, loader_threads=4, keys=input_keys)
-    test_rank_batcher = StreamBatcher(Config.dataset, 'test_ranking', Config.batch_size, randomize=False, loader_threads=4, keys=input_keys)
+    dev_rank_batcher = StreamBatcher(Config.dataset, 'dev_ranking', Config.batch_size, randomize=False, loader_threads=1, keys=input_keys)
+    test_rank_batcher = StreamBatcher(Config.dataset, 'test_ranking', Config.batch_size, randomize=False, loader_threads=1, keys=input_keys)
 
 
     if Config.model_name is None:
