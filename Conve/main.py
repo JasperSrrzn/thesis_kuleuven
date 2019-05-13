@@ -33,7 +33,7 @@ Config.backend = Backends.TORCH
 Config.parse_argv(sys.argv)
 
 Config.cuda = True
-Config.embedding_dim = 50
+Config.embedding_dim = 200
 #Logger.GLOBAL_LOG_LEVEL = LogLevel.DEBUG
 
 
@@ -83,7 +83,7 @@ def preprocess(dataset_name, delete_data=False):
         p.add_sent_processor(ToLower())
         p.add_sent_processor(CustomTokenizer(lambda x: x.split(' ')),keys=['e2_multi1', 'e2_multi2'])
         p.add_post_processor(ConvertTokenToIdx(keys2keys=keys2keys), keys=['e1', 'rel', 'rel_eval', 'e2', 'e2_multi1', 'e2_multi2'])
-        p.add_post_processor(StreamToHDF5(name, samples_per_file=1000, keys=input_keys))
+        p.add_post_processor(StreamToHDF5(name, samples_per_file=10000, keys=input_keys))
         p.execute(d)
 
 
