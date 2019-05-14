@@ -204,7 +204,7 @@ for test_sample in range(0,len(test_data)):
                     nodes = set(b for a, b, in rec.results.results)  # 'target' nodes associated with this evaluation node
                     predicates.append(problog.logic.Term(rec.call[0], *rec.call[1]))
             #print(predicates)
-            #actions,rand_dict = rerank_actions(actions,predicates,embeddings_enta,embeddings_entb,embeddings_rel,embeddings_rule,model,neighbors,rand_dict)
+            actions,rand_dict = rerank_actions(actions,predicates,embeddings_enta,embeddings_entb,embeddings_rel,embeddings_rule,model,neighbors,rand_dict)
 
             #for act in actions:
             #    print(db.get_node(act[1]))
