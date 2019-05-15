@@ -156,7 +156,7 @@ pd_results = pd.read_csv('results_transe_100.csv')
 results = []
 no_rerank_results = list(no_rerank_results['no rerank'])
 print('run all test samples')
-for test_sample in range(0,len(test_data)):
+for test_sample in range(14,len(test_data)):
     try:
         print(test_sample)
         row = test_data.iloc[test_sample]
