@@ -149,7 +149,6 @@ facts_and_rules_Prolog = PrologString("\n".join(facts_and_rules))
 test_data = pd.read_csv('test_data_transe_200.csv')
 #test_data = test_data[['entity a','entity b','rel id']]
 #test_data = test_data.drop_duplicates()
-print(test_data)
 
 no_rerank_results = pd.read_csv('results_no_rerank.csv')
 #pd_results = pd.read_csv('results_transe_200_new.csv')
@@ -157,7 +156,6 @@ no_rerank_results = pd.read_csv('results_no_rerank.csv')
 results = []
 no_rerank_results = list(no_rerank_results['no rerank'])
 for test_sample in range(0,len(test_data)):
-    print(test_sample)
     if no_rerank_results[test_sample]>30:
         print(test_sample)
         row = test_data.iloc[test_sample]
