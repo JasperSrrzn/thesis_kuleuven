@@ -35,7 +35,7 @@ def train():
     model.train()
     optimizer.zero_grad()
     out = model(data.edge_index, data.edge_type, data.edge_norm)
-    print(out)
+    print(out.shape)
     F.nll_loss(out[data.train_idx], data.train_y).backward()
     optimizer.step()
 
