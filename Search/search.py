@@ -154,6 +154,7 @@ no_rerank_results = pd.read_csv('results_no_rerank.csv')
 pd_results = pd.read_csv('results_transe_200_new.csv')
 results = list(pd_results['0'])
 #results = []
+print('progress')
 no_rerank_results = list(no_rerank_results['no rerank'])
 for test_sample in range(1800,len(test_data)):
     if no_rerank_results[test_sample]>30:
