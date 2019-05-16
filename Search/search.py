@@ -139,7 +139,7 @@ with open('dict_neighbors.json') as json_file:
 
 model = SimpleClassifier()
 
-
+print('dimension 200')
 print('opening facts and rules')
 with open('rules_and_facts.txt', 'r') as myfile:
     facts_and_rules = myfile.readlines()
