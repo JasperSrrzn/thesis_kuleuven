@@ -157,99 +157,99 @@ results = []
 no_rerank_results = list(no_rerank_results['no rerank'])
 for test_sample in range(0,len(test_data)):
     if no_rerank_results[test_sample]>30:
-        print(test_sample)
-        row = test_data.iloc[test_sample]
-        rel_id = row['rel id']
-        ent_a = row['entity a']
-        ent_b = row['entity b']
-        query = Term('q'+str(rel_id),Term('ent'+str(ent_a)),Term('ent'+str(ent_b)))
-        # Perform incremental grounding.
-        # This is a split-up of the engine.execute method.
+        try:
+            print(test_sample)
+            row = test_data.iloc[test_sample]
+            rel_id = row['rel id']
+            ent_a = row['entity a']
+            ent_b = row['entity b']
+            query = Term('q'+str(rel_id),Term('ent'+str(ent_a)),Term('ent'+str(ent_b)))
+            # Perform incremental grounding.
+            # This is a split-up of the engine.execute method.
 
-        # Initialize the engine with options:
-        #   - unbuffered: don't buffer results internally in the nodes (mimic depth-first construction of target)
-        #   - rc_first: first process 'result' and 'complete' messages (allows stopping on 'evaluation' message)
-        #   - label_all: (optional) label all intermediate nodes with their predicate
-        engine = problog.engine.DefaultEngine(unbuffered=True, rc_first=True, label_all=True)
+            # Initialize the engine with options:
+            #   - unbuffered: don't buffer results internally in the nodes (mimic depth-first construction of target)
+            #   - rc_first: first process 'result' and 'complete' messages (allows stopping on 'evaluation' message)
+            #   - label_all: (optional) label all intermediate nodes with their predicate
+            engine = problog.engine.DefaultEngine(unbuffered=True, rc_first=True, label_all=True)
 
-        # Target formula
-        #   - keep_all: don't collapse non-probabilistic subformula's => only for visualization
-        target = problog.formula.LogicFormula(keep_all=True)
+            # Target formula
+            #   - keep_all: don't collapse non-probabilistic subformula's => only for visualization
+            target = problog.formula.LogicFormula(keep_all=True)
 
-        db = engine.prepare(facts_and_rules_Prolog)
+            db = engine.prepare(facts_and_rules_Prolog)
 
-        # Start the incremental grounding.
-        # The result is a list of 'evaluation' actions.
-        actions = list(reversed(engine.ground_step(db, query, gp=target)))
+            # Start the incremental grounding.
+            # The result is a list of 'evaluation' actions.
+            actions = list(reversed(engine.ground_step(db, query, gp=target)))
 
-        i = 0
-        # Execute until no more 'evaluation' actions can be performed.
-        rand_dict={}
-        while actions:
-            actions = engine.execute_step(actions, steps=1, target=target, name=(False, query, 'query'))
+            i = 0
+            # Execute until no more 'evaluation' actions can be performed.
+            rand_dict={}
+            while actions:
+                actions = engine.execute_step(actions, steps=1, target=target, name=(False, query, 'query'))
 
-            # HERE YOU CAN DO WHATEVER YOU WANT WITH THE ACTION LIST
+                # HERE YOU CAN DO WHATEVER YOU WANT WITH THE ACTION LIST
 
-            # Below is just generating some output.
-            i += 1
+                # Below is just generating some output.
+                i += 1
 
-            #print('==== STEP %d ====' % i)
+                #print('==== STEP %d ====' % i)
 
 
-            predicates = []
-            # Go through the engine's stack and extract predicate evaluation nodes ('EvalDefine')
-            for rec in engine.stack:
-                if type(rec).__name__ == 'EvalDefine':  # TODO: we should also include 'EvalOr'?
-                    nodes = set(b for a, b, in rec.results.results)  # 'target' nodes associated with this evaluation node
-                    predicates.append(problog.logic.Term(rec.call[0], *rec.call[1]))
-            #print(predicates)
-            actions,rand_dict = rerank_actions(actions,predicates,embeddings_enta,embeddings_entb,embeddings_rel,embeddings_rule,model,neighbors,rand_dict)
+                predicates = []
+                # Go through the engine's stack and extract predicate evaluation nodes ('EvalDefine')
+                for rec in engine.stack:
+                    if type(rec).__name__ == 'EvalDefine':  # TODO: we should also include 'EvalOr'?
+                        nodes = set(b for a, b, in rec.results.results)  # 'target' nodes associated with this evaluation node
+                        predicates.append(problog.logic.Term(rec.call[0], *rec.call[1]))
+                #print(predicates)
+                actions,rand_dict = rerank_actions(actions,predicates,embeddings_enta,embeddings_entb,embeddings_rel,embeddings_rule,model,neighbors,rand_dict)
 
-            #for act in actions:
-            #    print(db.get_node(act[1]))
+                #for act in actions:
+                #    print(db.get_node(act[1]))
 
-            if type(engine.stack[0]).__name__=='EvalDefine':
-                trigger_nodes = set(b for a,b, in engine.stack[0].results.results)
+                if type(engine.stack[0]).__name__=='EvalDefine':
+                    trigger_nodes = set(b for a,b, in engine.stack[0].results.results)
 
-            #print ('Active predicates:')
-            active_nodes = set()  # These are the nodes in 'target' that are still active.
-            # Go through the engine's stack and extract predicate evaluation nodes ('EvalDefine')
-            for rec in engine.stack:
-                if type(rec).__name__ == 'EvalDefine':  # TODO: we should also include 'EvalOr'?
-                    nodes = set(b for a, b, in rec.results.results)  # 'target' nodes associated with this evaluation node
-                    #print ('\t', problog.logic.Term(rec.call[0], *rec.call[1]), list(nodes))
-                    active_nodes |= nodes # union
-            #print ('Active nodes:', list(active_nodes))
+                #print ('Active predicates:')
+                active_nodes = set()  # These are the nodes in 'target' that are still active.
+                # Go through the engine's stack and extract predicate evaluation nodes ('EvalDefine')
+                for rec in engine.stack:
+                    if type(rec).__name__ == 'EvalDefine':  # TODO: we should also include 'EvalOr'?
+                        nodes = set(b for a, b, in rec.results.results)  # 'target' nodes associated with this evaluation node
+                        #print ('\t', problog.logic.Term(rec.call[0], *rec.call[1]), list(nodes))
+                        active_nodes |= nodes # union
+                #print ('Active nodes:', list(active_nodes))
 
-            # Visualize and print the current logic program.
-            #%dotstr target.to_dot(nodeprops={n: 'fillcolor="red"' for n in active_nodes})
+                # Visualize and print the current logic program.
+                #%dotstr target.to_dot(nodeprops={n: 'fillcolor="red"' for n in active_nodes})
 
-            if len(list(trigger_nodes))>0:
-                print(str(test_sample)+ ':solution found ('+str(i)+')')
-                results.append(i)
-                pd_results = pd.DataFrame(results)
-                pd_results.to_csv('/content/gdrive/My Drive/results_transe_200.csv',index=False)
-                break
+                if len(list(trigger_nodes))>0:
+                    print(str(test_sample)+ ':solution found ('+str(i)+')')
+                    results.append(i)
+                    pd_results = pd.DataFrame(results)
+                    pd_results.to_csv('/content/gdrive/My Drive/results_transe_200.csv',index=False)
+                    break
 
-            if i>100:
-                print(str(test_sample)+ ':too long')
-                results.append(0)
-                pd_results = pd.DataFrame(results)
-                pd_results.to_csv('/content/gdrive/My Drive/results_transe_200.csv',index=False)
-                break
+                if i>100:
+                    print(str(test_sample)+ ':too long')
+                    results.append(0)
+                    pd_results = pd.DataFrame(results)
+                    pd_results.to_csv('/content/gdrive/My Drive/results_transe_200.csv',index=False)
+                    break
 
-            if len(actions)==0:
-                print(str(test_sample)+ ':solution not found')
-                results.append(-1)
-                pd_results = pd.DataFrame(results)
-                pd_results.to_csv('/content/gdrive/My Drive/results_transe_200.csv',index=False)
-                break
-    """
-    except:
-        print('cycle')
-        results.append(-2)
-        pd_results = pd.DataFrame(results)
-        pd_results.to_csv('pd_results.csv',index=False)
-        pd_results.to_csv('/content/gdrive/My Drive/results_transe_200.csv',index=False)
-        pass
-    """
+                if len(actions)==0:
+                    print(str(test_sample)+ ':solution not found')
+                    results.append(-1)
+                    pd_results = pd.DataFrame(results)
+                    pd_results.to_csv('/content/gdrive/My Drive/results_transe_200.csv',index=False)
+                    break
+
+        except:
+            print('cycle')
+            results.append(-2)
+            pd_results = pd.DataFrame(results)
+            pd_results.to_csv('pd_results.csv',index=False)
+            pd_results.to_csv('/content/gdrive/My Drive/results_transe_200.csv',index=False)
+            pass
