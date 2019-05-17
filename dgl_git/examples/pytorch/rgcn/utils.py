@@ -192,8 +192,7 @@ def evaluate(test_graph, model, test_triplets, num_entity, hits=[], eval_bz=100)
     with torch.no_grad():
         embedding, w = model.evaluate(test_graph)
         embedding_np = embedding.numpy()
-        w_np = w.numpy()
-        print(embedding.numpy())
+        print(type(w))
         np.save('/content/gdrive/My Drive/entity_embedding.npy',embedding_np)
         np.save('/content/gdrive/My Drive/relation_embedding.npy',w_np)
         s = test_triplets[:, 0]
