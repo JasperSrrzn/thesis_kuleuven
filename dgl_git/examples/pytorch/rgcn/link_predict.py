@@ -176,6 +176,7 @@ def main(args):
         optimizer.zero_grad()
 
         # validation
+        """
         if epoch % args.evaluate_every == 0:
             # perform validation on CPU because full graph is too large
             if use_cuda:
@@ -185,7 +186,7 @@ def main(args):
             mrr = utils.evaluate(test_graph, model, valid_data, num_nodes,
                                  hits=[1, 3, 10], eval_bz=args.eval_batch_size)
             # save best model
-            """
+
             if mrr < best_mrr:
                 if epoch >= args.n_epochs:
                     break
@@ -193,19 +194,17 @@ def main(args):
                 best_mrr = mrr
                 torch.save({'state_dict': model.state_dict(), 'epoch': epoch},
                            model_state_file)
-            """
-            if epoch >=args.n_epochs:
-                torch.save({'state_dict': model.state_dict(), 'epoch': epoch},
-                           model_state_file)
-                break
-                
+
             if use_cuda:
                 model.cuda()
-
+        """
+        if epoch >= args.n_epochs:
+            break
     print("training done")
     print("Mean forward time: {:4f}s".format(np.mean(forward_time)))
     print("Mean Backward time: {:4f}s".format(np.mean(backward_time)))
-    print(model.forward(train_data))
+    print(model.forward(test_graph))
+    #print(model.forward(train_data))
     print("\nstart testing:")
     # use best model checkpoint
     checkpoint = torch.load(model_state_file)
