@@ -191,6 +191,7 @@ def evaluate(test_graph, model, test_triplets, num_entity, hits=[], eval_bz=100)
     with torch.no_grad():
         embedding, w = model.evaluate(test_graph)
         print(embedding.shape)
+        print(w.shape)
         s = test_triplets[:, 0]
         r = test_triplets[:, 1]
         o = test_triplets[:, 2]
