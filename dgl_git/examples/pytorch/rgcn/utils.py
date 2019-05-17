@@ -9,6 +9,7 @@ import numpy as np
 import torch
 import dgl
 
+
 #######################################################################
 #
 # Utility function for building training and testing graphs
@@ -190,7 +191,8 @@ def perturb_and_get_rank(embedding, w, a, r, b, num_entity, batch_size=100):
 def evaluate(test_graph, model, test_triplets, num_entity, hits=[], eval_bz=100):
     with torch.no_grad():
         embedding, w = model.evaluate(test_graph)
-        print(type(embedding.numpy()))
+        np.save('/content/gdrive/My Drive/entity_embedding.npy',embedding.numpy())
+        np.save('/content/gdrive/My Drive/relation_embedding.npy',w.numpy())
         s = test_triplets[:, 0]
         r = test_triplets[:, 1]
         o = test_triplets[:, 2]
