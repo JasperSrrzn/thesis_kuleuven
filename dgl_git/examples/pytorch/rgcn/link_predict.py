@@ -176,7 +176,7 @@ def main(args):
         optimizer.zero_grad()
 
         # validation
-        """
+        
         if epoch % args.evaluate_every == 0:
             # perform validation on CPU because full graph is too large
             if use_cuda:
@@ -197,15 +197,11 @@ def main(args):
 
             if use_cuda:
                 model.cuda()
-        """
-        if epoch >= args.n_epochs:
-            break
-    model.cuda()
+
+
     print("training done")
     print("Mean forward time: {:4f}s".format(np.mean(forward_time)))
     print("Mean Backward time: {:4f}s".format(np.mean(backward_time)))
-    print(model.forward(test_graph))
-    #print(model.forward(train_data))
     print("\nstart testing:")
     # use best model checkpoint
     checkpoint = torch.load(model_state_file)

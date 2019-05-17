@@ -190,6 +190,7 @@ def perturb_and_get_rank(embedding, w, a, r, b, num_entity, batch_size=100):
 def evaluate(test_graph, model, test_triplets, num_entity, hits=[], eval_bz=100):
     with torch.no_grad():
         embedding, w = model.evaluate(test_graph)
+        print(embedding)
         s = test_triplets[:, 0]
         r = test_triplets[:, 1]
         o = test_triplets[:, 2]
@@ -209,4 +210,3 @@ def evaluate(test_graph, model, test_triplets, num_entity, hits=[], eval_bz=100)
             avg_count = torch.mean((ranks <= hit).float())
             print("Hits (raw) @ {}: {:.6f}".format(hit, avg_count.item()))
     return mrr.item()
-
