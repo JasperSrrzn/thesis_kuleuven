@@ -200,6 +200,7 @@ def main(args):
         """
         if epoch >= args.n_epochs:
             break
+    model.cuda()
     print("training done")
     print("Mean forward time: {:4f}s".format(np.mean(forward_time)))
     print("Mean Backward time: {:4f}s".format(np.mean(backward_time)))
