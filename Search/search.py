@@ -161,7 +161,7 @@ pd_results = pd.read_csv('results_transe_200_all.csv')
 results = list(pd_results['0'])
 #results = []
 no_rerank_results = list(no_rerank_results['no rerank'])
-for test_sample in range(1911,len(test_data)):
+for test_sample in range(1979,len(test_data)):
     try:
         print('---------------')
         print(str(test_sample)+ ' : '+str(no_rerank_results[test_sample]))
