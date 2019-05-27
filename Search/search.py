@@ -157,9 +157,9 @@ test_data = pd.read_csv('test_data_transe_50.csv')
 #test_data = test_data.drop_duplicates()
 
 no_rerank_results = pd.read_csv('results_no_rerank.csv')
-#pd_results = pd.read_csv('results_transe_50_all.csv')
-#results = list(pd_results['0'])
-results = []
+pd_results = pd.read_csv('results_transe_50_new.csv')
+results = list(pd_results['0'])
+#results = []
 no_rerank_results = list(no_rerank_results['no rerank'])
 for test_sample in range(0,len(test_data)):
     if no_rerank_results[test_sample]>30:
