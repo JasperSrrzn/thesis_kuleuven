@@ -161,7 +161,7 @@ no_rerank_results = pd.read_csv('results_no_rerank.csv')
 #results = list(pd_results['0'])
 results = []
 no_rerank_results = list(no_rerank_results['no rerank'])
-for test_sample in range(0,len(test_data)):
+for test_sample in range(900,len(test_data)):
     if no_rerank_results[test_sample]>30:
         try:
             print('---------------')
