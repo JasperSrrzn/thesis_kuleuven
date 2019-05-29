@@ -157,11 +157,11 @@ test_data = pd.read_csv('test_data_gcn_500.csv')
 #test_data = test_data.drop_duplicates()
 
 no_rerank_results = pd.read_csv('results_no_rerank.csv')
-#pd_results = pd.read_csv('results_gcn_500_new.csv')
-#results = list(pd_results['0'])
-results = []
+pd_results = pd.read_csv('results_gcn_500_new.csv')
+results = list(pd_results['0'])
+#results = []
 no_rerank_results = list(no_rerank_results['no rerank'])
-for test_sample in range(1690,len(test_data)):
+for test_sample in range(2160,len(test_data)):
     if no_rerank_results[test_sample]>30:
         try:
             print('---------------')
